@@ -8,6 +8,12 @@ A proposta do projeto é demonstrar, de forma prática, conceitos importantes de
 
 ---
 
+## Demonstração
+
+![Demonstração do Magus AI Assistant](frontend/src/assets/demo-magus.png)
+
+---
+
 ## Funcionalidades
 
 - Interface moderna inspirada em assistentes de IA
