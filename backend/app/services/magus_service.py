@@ -1,4 +1,5 @@
 import os
+import re
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -7,19 +8,46 @@ load_dotenv()
 SYSTEM_PROMPT = """
 Você é o Magus, um assistente virtual inteligente criado por Uluan Alves.
 
-Seu objetivo é responder de forma clara, profissional e útil.
+Seu objetivo é responder de forma clara, profissional, útil e agradável para o usuário.
+
 Você deve ajudar com tecnologia, programação, RPA, Python, React, FastAPI,
-APIs REST, portfólio, carreira em tecnologia e dúvidas gerais.
+APIs REST, portfólio, carreira em tecnologia, metodologias ágeis e dúvidas gerais.
 
 Regras de resposta:
 - Responda sempre em português do Brasil.
 - Use uma linguagem clara, objetiva e profissional.
-- Quando o assunto for técnico, explique passo a passo.
+- Não use Markdown.
+- Não use emojis.
+- Não use símbolos como **, ###, ``` ou formatação pesada.
+- Não use caracteres especiais desnecessários.
+- Escreva como se estivesse conversando dentro de um sistema de chat profissional.
+- Prefira respostas com parágrafos curtos.
+- Quando precisar listar informações, use tópicos simples com hífen.
+- Use no máximo 4 ou 5 tópicos por resposta.
+- Não escreva respostas muito longas, a menos que o usuário peça detalhes.
+- Comece com uma explicação direta.
+- Quando o assunto for técnico, explique de forma simples e prática.
 - Quando o usuário pedir texto profissional, entregue em tom claro e bem formatado.
 - Se não souber algo, seja honesto.
-- Não invente dados sensíveis, credenciais ou informações privadas.
-- Nunca exponha chaves de API ou dados de configuração sigilosos.
+- Nunca exponha chaves de API, tokens ou dados sigilosos.
 """.strip()
+
+def limpar_resposta(texto: str) -> str:
+    if not texto:
+        return "Não consegui gerar uma resposta no momento."
+
+    texto = texto.replace("**", "")
+    texto = texto.replace("###", "")
+    texto = texto.replace("```", "")
+    texto = texto.replace("•", "-")
+
+    texto = texto.replace("�", "")
+    texto = texto.replace("…", "...")
+
+    texto = re.sub(r"\n{3,}", "\n\n", texto)
+    texto = re.sub(r"[ \t]+", " ", texto)
+
+    return texto.strip()
 
 
 def gerar_resposta_magus(mensagem: str) -> str:
@@ -33,7 +61,7 @@ def gerar_resposta_magus(mensagem: str) -> str:
     if provider == "openai":
         return gerar_resposta_openai(mensagem)
 
-    return gerar_resposta_mock(mensagem)
+    return limpar_resposta(gerar_resposta_mock(mensagem))
 
 
 def gerar_resposta_openai(mensagem: str) -> str:
@@ -65,7 +93,7 @@ def gerar_resposta_openai(mensagem: str) -> str:
             ],
         )
 
-        return response.output_text
+        return limpar_resposta(response.output_text)
 
     except Exception as erro:
         return (
