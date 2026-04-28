@@ -7,6 +7,12 @@ const [mensagem, setMensagem] = useState("");
 const [mensagens, setMensagens] = useState([]);
 const [conversaAtualId, setConversaAtualId] = useState(null);
 
+const [statusApi, setStatusApi] = useState({
+  status: "offline",
+  mode: "Verificando...",
+  model: "",
+});
+
 const [historico, setHistorico] = useState(() => {
   const historicoSalvo = localStorage.getItem("magus_historico");
 
@@ -22,6 +28,23 @@ const [carregando, setCarregando] = useState(false);
   useEffect(() => {
     localStorage.setItem("magus_historico", JSON.stringify(historico));
   }, [historico]);
+
+  useEffect(() => {
+  async function buscarStatusApi() {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/status");
+      setStatusApi(response.data);
+    } catch (error) {
+      setStatusApi({
+        status: "offline",
+        mode: "Backend offline",
+        model: "",
+      });
+    }
+  }
+
+  buscarStatusApi();
+}, []);
 
   async function enviarMensagem() {
   if (!mensagem.trim()) return;
@@ -204,10 +227,12 @@ function abrirConversa(conversa) {
             <p>Assistente virtual fullstack com Python e React</p>
           </div>
 
-          <div className="status">
-            <span></span>
-            Online
-          </div>
+          <div className={`status ${statusApi.status === "online" ? "online" : "offline"}`}>
+  <span></span>
+  {statusApi.status === "online"
+    ? `Online · ${statusApi.mode}${statusApi.model ? ` · ${statusApi.model}` : ""}`
+    : statusApi.mode}
+</div>
         </header>
 
         <section className="hero">

@@ -26,8 +26,24 @@ A proposta do projeto é demonstrar, de forma prática, conceitos importantes de
 - Recuperação de conversas ao clicar no histórico
 - Modo visual dark
 - Estrutura organizada para evolução do projeto
+- Modo simulado para respostas locais
+- Estrutura preparada para integração com IA real
+- Configuração por variáveis de ambiente com `.env`
 
 ---
+
+---
+
+## Configuração de IA
+
+O projeto possui dois modos de execução:
+
+### Modo simulado
+
+Utiliza respostas locais, sem necessidade de chave de API.
+
+```env
+MAGUS_AI_PROVIDER=mock
 
 ## Tecnologias utilizadas
 

@@ -170,6 +170,16 @@ input {
   border-radius: 999px;
 }
 
+.status.offline {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #fecaca;
+}
+
+.status.offline span {
+  background: #ef4444;
+}
+
 .hero {
   text-align: center;
   padding: 70px 24px 20px;
@@ -288,6 +298,10 @@ input {
 .bubble p {
   color: #f4f4f5;
   font-size: 15px;
+  white-space: pre-wrap;
+  text-align: left;
+  line-height: 1.7;
+  overflow-wrap: break-word;
 }
 
 .input-wrapper {
