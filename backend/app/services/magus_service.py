@@ -19,7 +19,9 @@ Regras de resposta:
 - Não use Markdown.
 - Não use emojis.
 - Não use símbolos como **, ###, ``` ou formatação pesada.
-- Não use caracteres especiais desnecessários.
+- Não use caracteres especiais estranhos ou símbolos decorativos.
+- Não misture idiomas sem necessidade.
+- Revise a resposta antes de finalizar.
 - Escreva como se estivesse conversando dentro de um sistema de chat profissional.
 - Prefira respostas com parágrafos curtos.
 - Quando precisar listar informações, use tópicos simples com hífen.
@@ -30,22 +32,37 @@ Regras de resposta:
 - Quando o usuário pedir texto profissional, entregue em tom claro e bem formatado.
 - Se não souber algo, seja honesto.
 - Nunca exponha chaves de API, tokens ou dados sigilosos.
+- Por padrão, responda em até 2 parágrafos curtos e no máximo 4 tópicos.
+- Só aprofunde a resposta se o usuário pedir detalhes.
 """.strip()
 
 def limpar_resposta(texto: str) -> str:
     if not texto:
         return "Não consegui gerar uma resposta no momento."
 
+    # Remove formatações indesejadas
     texto = texto.replace("**", "")
     texto = texto.replace("###", "")
     texto = texto.replace("```", "")
     texto = texto.replace("•", "-")
 
+    # Remove caracteres quebrados ou estranhos
     texto = texto.replace("�", "")
-    texto = texto.replace("…", "...")
+    texto = texto.replace("□", "")
+    texto = texto.replace("▯", "")
+    texto = texto.replace("�", "")
 
+    # Remove caracteres de controle invisíveis
+    texto = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]", "", texto)
+
+    # Remove sequências muito estranhas de símbolos
+    texto = re.sub(r"[^\S\r\n]+", " ", texto)
+
+    # Corrige excesso de quebras de linha
     texto = re.sub(r"\n{3,}", "\n\n", texto)
-    texto = re.sub(r"[ \t]+", " ", texto)
+
+    # Remove espaços antes de pontuação
+    texto = re.sub(r"\s+([,.!?;:])", r"\1", texto)
 
     return texto.strip()
 
